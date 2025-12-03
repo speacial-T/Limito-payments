@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <link rel="icon" type="image/png" th:href="@{/favicon.png}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/portOne.css}"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>포트원 결제연동 샘플</title>
+    <script src="https://cdn.portone.io/v2/browser-sdk.js" async defer></script>
+</head>
+<body>
+<div id="root">
+    <dialog id="loadingDialog" open>
+        <article aria-busy="true">결제 정보를 불러오는 중입니다.</article>
+    </dialog>
+    <main id="checkoutDialog" style="display: none">
+        <form id="checkoutForm">
+            <article>
+                <div class="item">
+                    <h3 id="itemSummaryHeader"></h3>
+                    <ul id="itemList">
+                    </ul>
+                </div>
+                <div class="price">
+                    <label>총 구입 가격</label>
+                    <span id="totalPriceValue" class="price-value"></span>
+                </div>
+            </article>
+            <button id="checkoutButton" type="submit">결제</button>
+        </form>
+    </main>
+    <dialog id="failDialog">
+        <header>
+            <h1>결제 실패</h1>
+        </header>
+        <p id="failMessage"></p>
+        <button type="button" class="closeDialog">닫기</button>
+    </dialog>
+    <dialog id="successDialog">
+        <header>
+            <h1>결제 성공</h1>
+        </header>
+        <p>결제에 성공했습니다.</p>
+        <button type="button" class="closeDialog">닫기</button>
+    </dialog>
+    <dialog id="virtualAccountDialog">
+        <header>
+            <h1>가상계좌 발급 완료</h1>
+        </header>
+        <p>가상계좌가 발급되었습니다.</p>
+        <button type="button" class="closeDialog">닫기</button>
+    </dialog>
+</div>
+<!--<script src="/config.js"></script>-->
+<script th:inline="javascript">
+    const orderId = '[[${orderId}]]';
+    const itemSummary = '[[${itemSummary}]]';
+    const itemsString = '[[${items}]]'; // JSON 문자열로 받음
+    // 🚨 수정: JSON 문자열을 실제 배열 객체로 파싱
+    const items = JSON.parse(itemsString);
+    const totalPrice = '[[${totalPrice}]]';
+    const storeId = '[[${storeId}]]';
+    const channelKey = '[[${channelKey}]]';
+    console.log("channelKey :", channelKey);
+    console.log("storeId :", storeId);
+    const checkout = new Checkout(
+        storeId, // 상점 ID
+        channelKey, // 채널 키
+    )
+    checkout.load()
+
+    function Checkout(storeId, channelKey) {
+        // 목업 데이터 대신 서버에서 전달된 데이터 사용
+        const orderData = {
+            orderId: orderId,
+            itemSummary: itemSummary,
+            items: items, // 파싱된 배열 사용
+            totalPrice: totalPrice,
+        };
+
+        this.load = async () => {
+            const waitPortOne = new Promise((resolve) => {
+                const polling = setInterval(() => {
+                    if (window.PortOne != null) {
+                        clearInterval(polling)
+                        resolve()
+                    }
+                }, 50)
+            })
+
+            // 목업 데이터 로딩 대기 코드를 제거하고 PortOne 로딩만 기다립니다.
+            await Promise.all([waitPortOne])
+
+            window.loadingDialog.open = false
+            window.checkoutDialog.open = true
+            await this.showCheckout()
+        }
+
+        this.showCheckout = async () => {
+            document.getElementById('itemSummaryHeader').replaceChildren(orderData.itemSummary);
+
+            // 상품 총 가격 표시
+            document.getElementById('totalPriceValue').replaceChildren(`${orderData.totalPrice.toLocaleString()}원`);
+
+            const itemListElement = document.getElementById('itemList');
+            itemListElement.innerHTML = ''; // 기존 목록 초기화
+
+            // 상품 목록을 동적으로 생성하여 표시
+            orderData.items.forEach(item => {
+                const li = document.createElement('li');
+                const amountText = item.productPrice != null ? `${item.productPrice.toLocaleString()}원` : '가격 정보 없음';
+                li.innerHTML = `
+                    <div class="item-text">
+                        <h5>${item.productName}</h5>
+                        <p class="price-value">${amountText}</p>
+                    </div>
+                    <p>${item.quantity} 개</p>
+                `;
+                itemListElement.appendChild(li);
+            });
+
+            window.checkoutDialog.onsubmit = async (e) => {
+                e.preventDefault()
+                this.setWaitingPayment(true)
+                const paymentId = randomId()
+
+                // PortOne 결제 요청
+                const payment = await PortOne.requestPayment({
+                    storeId,
+                    channelKey,
+                    paymentId,
+                    orderName: orderData.itemSummary, // 상품 요약 사용
+                    totalAmount: orderData.totalPrice, // 총 가격 사용
+                    currency: "KRW",
+                    payMethod: "CARD",
+                    customData: {
+                        orderId: orderData.orderId, // 주문 ID를 customData에 포함
+                    },
+                })
+
+                if (payment.code != null) {
+                    this.setWaitingPayment(false)
+                    console.log(payment)
+                    this.openFailDialog(payment.message)
+                    return
+                }
+
+                // 결제 승인 요청 (Controller의 @PostMapping("/v1/payments/{orderId}/confirm") 경로로 변경)
+                const completeResponse = await fetch(`/v1/payments/${orderData.orderId}/confirm`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        orderId: payment.orderId,
+                        paymentId: payment.paymentId,
+                        amount: payment.totalAmount,
+                        confirmedAt: payment.confirmedAt
+                    }),
+                })
+
+                this.setWaitingPayment(false)
+
+                if (completeResponse.ok) {
+                    const paymentComplete = await completeResponse.json()
+                    switch (paymentComplete.status) {
+                        case "PAID":
+                            this.openSuccessDialog()
+                            break
+                        case "VIRTUAL_ACCOUNT_ISSUED":
+                            this.openVirtualAccountDialog()
+                            break
+                    }
+                } else {
+                    this.openFailDialog(await completeResponse.text())
+                }
+            }
+
+            for (const dialogButton of document.getElementsByClassName(
+                "closeDialog",
+            )) {
+                dialogButton.onclick = () => {
+                    dialogButton.closest('dialog').open = false
+                }
+            }
+            window.checkoutDialog.style = ""
+        }
+
+        this.setWaitingPayment = (isWaiting) => {
+            window.checkoutButton.setAttribute("aria-busy", isWaiting.toString())
+            window.checkoutButton.disabled = isWaiting
+        }
+        this.openFailDialog = (message) => {
+            window.failMessage.replaceChildren(message)
+            window.failDialog.open = true
+        }
+        this.openSuccessDialog = () => {
+            window.successDialog.open = true
+        }
+        this.openVirtualAccountDialog = () => {
+            window.virtualAccountDialog.open = true
+        }
+
+        function randomId() {
+            return [...crypto.getRandomValues(new Uint32Array(2))]
+                .map((word) => word.toString(16).padStart(8, "0"))
+                .join("")
+        }
+    }
+</script>
+</body>
+</html>

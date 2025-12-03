@@ -24,9 +24,5 @@ public class ConfirmPaymentRequestV1 {
 
 	private List<OrderItem> items;
 
-	private UUID paymentId;
-
-	private String status;
-
-	private int amount;
+	private int totalPrice;
 }
