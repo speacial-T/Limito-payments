@@ -1,4 +1,4 @@
-package com.limito.payment.domain.model.enums;
+package com.limito.payment.infrastructure.persistence.entity.enums;
 
 public enum PaymentMethodEnum {
 	CARD,

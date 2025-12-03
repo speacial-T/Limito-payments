@@ -1,4 +1,4 @@
-package com.limito.payment.domain.model.enums;
+package com.limito.payment.infrastructure.persistence.entity.enums;
 
 import lombok.NoArgsConstructor;
 
