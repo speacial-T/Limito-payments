@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.limito.payment.application.PaymentServiceV1;
 import com.limito.payment.presentation.dto.request.ConfirmPaymentRequestV1;
@@ -18,6 +19,7 @@ import com.limito.payment.presentation.dto.response.ConfirmPaymentResponseV1;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import reactor.core.publisher.Mono;
 
 @Slf4j
 @Controller
@@ -40,28 +42,25 @@ public class PaymentControllerV1 {
 	) {
 
 		ConfirmPaymentRequestV1 paymentData = paymentService.preparePayment(orderId);
-
-		// 모델에 데이터 추가
 		model.addAttribute("orderId", orderId.toString());
 		model.addAttribute("itemSummary", paymentData.getItemSummary());
 		model.addAttribute("items", paymentData.getItems());
 		model.addAttribute("totalPrice", paymentData.getTotalPrice());
-
-		// ENV에서 읽은 포트원 설정 전달
-		model.addAttribute("channelKey", storeId);
+		model.addAttribute("storeId", storeId);
 		model.addAttribute("channelKey", channelKey);
 
 		return "payment/portOne"; // templates/payment/portOne.html
 	}
 
-	@PostMapping("/{orderId}/confirm")
+	@PostMapping("/{paymentId}/confirm")
 	public ResponseEntity<ConfirmPaymentResponseV1> confirmPayment(
-		@PathVariable("orderId") UUID orderId,
-		@RequestBody ConfirmPaymentResponseV1 response
+		@PathVariable("paymentId") String paymentId
 	) {
-		ConfirmPaymentResponseV1 paymentData =
-			paymentService.confirmPayment(orderId, response);
-		log.info("Confirmed payment data: {}", paymentData);
-		return ResponseEntity.ok(paymentData);
+		log.info("paymentId={}", paymentId);
+		ConfirmPaymentResponseV1 response = new ConfirmPaymentResponseV1();
+		response.setPaymentId(UUID.fromString(paymentId));
+
+		response = paymentService.confirmPayment(UUID.fromString(paymentId), null);
+		return ResponseEntity.ok(response);
 	}
 }

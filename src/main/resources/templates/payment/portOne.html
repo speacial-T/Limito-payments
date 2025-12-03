@@ -59,8 +59,8 @@
     // 🚨 수정: JSON 문자열을 실제 배열 객체로 파싱
     const items = JSON.parse(itemsString);
     const totalPrice = '[[${totalPrice}]]';
-    const storeId = '[[${storeId}]]';
-    const channelKey = '[[${channelKey}]]';
+    const channelKey = /*[[${channelKey}]]*/ "";
+    const storeId = /*[[${storeId}]]*/ "";
     console.log("channelKey :", channelKey);
     console.log("storeId :", storeId);
     const checkout = new Checkout(
@@ -123,6 +123,7 @@
                 e.preventDefault()
                 this.setWaitingPayment(true)
                 const paymentId = randomId()
+                console.log(paymentId);
 
                 // PortOne 결제 요청
                 const payment = await PortOne.requestPayment({
@@ -144,7 +145,7 @@
                     this.openFailDialog(payment.message)
                     return
                 }
-
+                console.log(payment);
                 // 결제 승인 요청 (Controller의 @PostMapping("/v1/payments/{orderId}/confirm") 경로로 변경)
                 const completeResponse = await fetch(`/v1/payments/${orderData.orderId}/confirm`, {
                     method: "POST",
