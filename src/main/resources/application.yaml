@@ -20,7 +20,7 @@ spring:
     prefix: classpath:/templates/
     suffix: .html # 기본값
   config:
-    import: optional:file:.env
+    import: optional:file:.env[.properties]
 #  cloud:
 #    openfeign:
 #      client:

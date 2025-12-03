@@ -1,4 +1,4 @@
-package com.limito.payment.presentation.dto.response;
+package com.limito.payment.infrastructure.dto.response;
 
 import java.util.UUID;
 
@@ -17,7 +17,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @Builder
 @ToString
-public class ConfirmPaymentResponseV1 {
+public class PortOneConfirmPaymentResponse {
 	private UUID orderId;
 	private String paymentKey;
 	private PaymentSatusEnum paymentStatus;

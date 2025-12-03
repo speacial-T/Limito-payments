@@ -1,9 +1,7 @@
-package com.limito.payment.presentation.dto.request;
+package com.limito.payment.infrastructure.dto.request;
 
 import java.util.List;
 import java.util.UUID;
-
-import org.antlr.v4.runtime.misc.NotNull;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

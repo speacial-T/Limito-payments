@@ -3,8 +3,6 @@ package com.limito.payment.presentation.dto.request;
 import java.util.List;
 import java.util.UUID;
 
-import org.antlr.v4.runtime.misc.NotNull;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,7 +16,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @Builder
 @ToString
-public class ConfirmPaymentRequestV1 {
+public class PortOneConfirmPaymentRequest {
 
 	private UUID orderId;
 

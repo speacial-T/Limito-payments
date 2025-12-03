@@ -56,7 +56,7 @@
     const orderId = '[[${orderId}]]';
     const itemSummary = '[[${itemSummary}]]';
     const itemsString = '[[${items}]]'; // JSON 문자열로 받음
-    // 🚨 수정: JSON 문자열을 실제 배열 객체로 파싱
+
     const items = JSON.parse(itemsString);
     const totalPrice = '[[${totalPrice}]]';
     const channelKey = /*[[${channelKey}]]*/ "";
@@ -146,15 +146,14 @@
                     return
                 }
                 console.log(payment);
-                // 결제 승인 요청 (Controller의 @PostMapping("/v1/payments/{orderId}/confirm") 경로로 변경)
-                const completeResponse = await fetch(`/v1/payments/${orderData.orderId}/confirm`, {
+                const completeResponse = await fetch(`/v1/payments/${payment.paymentId}/confirm`, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
                     },
                     body: JSON.stringify({
                         orderId: payment.orderId,
-                        paymentId: payment.paymentId,
+                        paymentKey: payment.paymentId,
                         amount: payment.totalAmount,
                         confirmedAt: payment.confirmedAt
                     }),

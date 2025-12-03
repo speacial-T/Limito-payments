@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.limito.payment.application.PaymentServiceV1;
 import com.limito.payment.presentation.dto.request.ConfirmPaymentRequestV1;
+import com.limito.payment.presentation.dto.request.PortOneConfirmPaymentRequest;
 import com.limito.payment.presentation.dto.response.ConfirmPaymentResponseV1;
+import com.limito.payment.presentation.dto.response.PortOneConfirmPaymentResponse;
 
 import lombok.RequiredArgsConstructor;
 
@@ -28,8 +30,8 @@ public class PaymentInternalControllerV1 {
 		@PathVariable String orderId,
 		@RequestBody ConfirmPaymentRequestV1 request) {
 
-		ConfirmPaymentRequestV1 response = paymentService.preparePayment(UUID.fromString(orderId), request);
-		// return ResponseEntity.ok(response);
+		PortOneConfirmPaymentRequest request1 = paymentService.preparePayment(UUID.fromString(orderId), request);
+
 		return new ResponseEntity<ConfirmPaymentResponseV1>(
 			new ConfirmPaymentResponseV1(), HttpStatus.OK);
 	}

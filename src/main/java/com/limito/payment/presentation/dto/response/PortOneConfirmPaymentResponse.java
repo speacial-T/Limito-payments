@@ -17,7 +17,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @Builder
 @ToString
-public class ConfirmPaymentResponseV1 {
+public class PortOneConfirmPaymentResponse {
 	private UUID orderId;
 	private String paymentKey;
 	private PaymentSatusEnum paymentStatus;

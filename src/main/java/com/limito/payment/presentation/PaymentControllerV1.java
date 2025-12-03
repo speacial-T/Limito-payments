@@ -54,13 +54,13 @@ public class PaymentControllerV1 {
 
 	@PostMapping("/{paymentId}/confirm")
 	public ResponseEntity<ConfirmPaymentResponseV1> confirmPayment(
-		@PathVariable("paymentId") String paymentId
+		@PathVariable("paymentId") String paymentKey
 	) {
-		log.info("paymentId={}", paymentId);
+		log.info("paymentKey={}", paymentKey);
 		ConfirmPaymentResponseV1 response = new ConfirmPaymentResponseV1();
-		response.setPaymentId(UUID.fromString(paymentId));
+		response.setPaymentKey(paymentKey);
 
-		response = paymentService.confirmPayment(UUID.fromString(paymentId), null);
+		response = paymentService.confirmPayment(paymentKey, null);
 		return ResponseEntity.ok(response);
 	}
 }

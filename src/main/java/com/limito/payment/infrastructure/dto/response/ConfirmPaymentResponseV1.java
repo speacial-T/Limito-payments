@@ -1,4 +1,4 @@
-package com.limito.payment.presentation.dto.response;
+package com.limito.payment.infrastructure.dto.response;
 
 import java.util.UUID;
 
