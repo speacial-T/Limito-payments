@@ -47,5 +47,5 @@ public class Payment {
 	private String cardName;
 
 	private String pgProvider;
-	private List<PaymentItemEntity> items = new ArrayList<>();
+	private List<PaymentItem> items = new ArrayList<>();
 }

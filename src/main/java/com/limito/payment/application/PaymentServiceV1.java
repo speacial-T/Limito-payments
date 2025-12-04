@@ -16,9 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import reactor.core.publisher.Mono;
-
-import org.springframework.web.reactive.function.client.WebClient;
 
 @Slf4j
 @Service
@@ -58,41 +55,9 @@ public class PaymentServiceV1 {
 		for (OrderItem item : items) {
 			totalPrice += item.getProductPrice();
 		}
-		request.setTotalPrice(11000);
+		request.setTotalPrice(totalPrice);
 		request.setItems(items);
 		return request;
-	}
-
-	@Transactional
-	public PortOneConfirmPaymentRequest preparePayment(
-		UUID orderId, ConfirmPaymentRequestV1 request
-	) {
-		log.info("Preparing payment for orderId: {}", orderId);
-
-		PortOneConfirmPaymentRequest completeRequest = new PortOneConfirmPaymentRequest();
-		completeRequest.setOrderId(orderId);
-		// 더미 상품 데이터 (실제로는 payment.getItems()에서 가져옴)
-		// TODO 여기서는 주문 서비스에서 받아온 정보를 적용하도록 수정 필요
-		completeRequest.setItemSummary("샘플 상품 3개");
-		completeRequest.setTotalPrice(11000);
-		List<OrderItem> items = List.of(
-			OrderItem.builder()
-				.orderItemId(UUID.randomUUID())
-				.productName("샘플 상품 1")
-				.productPrice(5000)
-				.quantity(1)
-				.sellerId(1L)
-				.build(),
-			OrderItem.builder()
-				.orderItemId(UUID.randomUUID())
-				.productName("샘플 상품 2")
-				.productPrice(3000)
-				.quantity(2)
-				.sellerId(2L)
-				.build()
-		);
-		completeRequest.setItems(items);
-		return completeRequest;
 	}
 
 	@Transactional
