@@ -3,7 +3,7 @@ package com.limito.payment.infrastructure.persistence.entity;
 import java.util.UUID;
 
 import com.limito.common.entity.BaseEntity;
-import com.limito.payment.infrastructure.persistence.entity.enums.PaymentSatusEnum;
+import com.limito.payment.domain.enums.PaymentStatusEnum;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -49,5 +49,5 @@ public class PaymentItemEntity extends BaseEntity {
 
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
-	private PaymentSatusEnum status;
+	private PaymentStatusEnum status;
 }

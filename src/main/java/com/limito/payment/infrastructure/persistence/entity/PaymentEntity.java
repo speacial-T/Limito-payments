@@ -6,9 +6,9 @@ import java.util.List;
 import java.util.UUID;
 
 import com.limito.common.entity.BaseEntity;
-import com.limito.payment.infrastructure.persistence.entity.enums.CancelStatusEnum;
-import com.limito.payment.infrastructure.persistence.entity.enums.PaymentMethodEnum;
-import com.limito.payment.infrastructure.persistence.entity.enums.PaymentSatusEnum;
+import com.limito.payment.domain.enums.CancelStatusEnum;
+import com.limito.payment.domain.enums.PaymentMethodEnum;
+import com.limito.payment.domain.enums.PaymentStatusEnum;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -32,7 +32,7 @@ public class PaymentEntity extends BaseEntity {
 
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
-	private PaymentSatusEnum status;
+	private PaymentStatusEnum status;
 
 	@Column(name = "payment_key", nullable = false, length = 50)
 	private String paymentKey;

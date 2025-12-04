@@ -2,7 +2,7 @@ package com.limito.payment.domain.model;
 
 import java.util.UUID;
 
-import com.limito.payment.infrastructure.persistence.entity.enums.PaymentSatusEnum;
+import com.limito.payment.domain.enums.PaymentStatusEnum;
 import com.limito.payment.infrastructure.persistence.entity.PaymentEntity;
 
 import lombok.AccessLevel;
@@ -33,5 +33,5 @@ public class PaymentItem {
 
 	private Long refundPrice;
 
-	private PaymentSatusEnum status;
+	private PaymentStatusEnum status;
 }

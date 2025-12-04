@@ -6,12 +6,11 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import com.limito.payment.domain.repository.PaymentRepository;
+import com.limito.payment.infrastructure.persistence.jpa.PaymentJpaRepository;
 import com.limito.payment.presentation.dto.request.ConfirmPaymentRequestV1;
 import com.limito.payment.presentation.dto.request.OrderItem;
 import com.limito.payment.presentation.dto.request.PortOneConfirmPaymentRequest;
 import com.limito.payment.presentation.dto.response.ConfirmPaymentResponseV1;
-import com.limito.payment.presentation.dto.response.PortOneConfirmPaymentResponse;
 
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,11 +24,10 @@ import org.springframework.web.reactive.function.client.WebClient;
 @Service
 @RequiredArgsConstructor
 public class PaymentServiceV1 {
-	private final PaymentRepository paymentRepository;
 
 	@Value("${portone.store-id}")
 	private String storeId;
-	private final WebClient webClient;
+	private PaymentJpaRepository paymentJpaRepository;
 
 	@Transactional
 	public ConfirmPaymentRequestV1 getPayment(
@@ -100,16 +98,9 @@ public class PaymentServiceV1 {
 	@Transactional
 	public ConfirmPaymentResponseV1 confirmPayment(String paymentKey, ConfirmPaymentResponseV1 response) {
 
+		response.setPaymentKey(paymentKey);
 		log.info("Confirming payment for response: {}", response);
-		System.out.println("Confirming payment for response: " + getRawPaymentJson(paymentKey, storeId));
 
 		return response;
-	}
-
-	public Mono<String> getRawPaymentJson(String paymentKey, String storeId) {
-		return webClient.get()
-			.uri("/{paymentId}?storeId={storeId}", paymentKey, storeId)
-			.retrieve()
-			.bodyToMono(String.class); // JSON 문자열로 그대로 받음
 	}
 }

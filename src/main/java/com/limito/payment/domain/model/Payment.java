@@ -5,9 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import com.limito.payment.infrastructure.persistence.entity.enums.CancelStatusEnum;
-import com.limito.payment.infrastructure.persistence.entity.enums.PaymentMethodEnum;
-import com.limito.payment.infrastructure.persistence.entity.enums.PaymentSatusEnum;
+import com.limito.payment.domain.enums.CancelStatusEnum;
+import com.limito.payment.domain.enums.PaymentMethodEnum;
+import com.limito.payment.domain.enums.PaymentStatusEnum;
 import com.limito.payment.infrastructure.persistence.entity.PaymentItemEntity;
 
 import lombok.AccessLevel;
@@ -24,7 +24,7 @@ public class Payment {
 
 	private UUID orderId;
 
-	private PaymentSatusEnum status;
+	private PaymentStatusEnum status;
 
 	private String paymentKey;
 
