@@ -1,10 +1,10 @@
-package com.limito.payment.domain.dto.resquest;
+package com.limito.payment.application.dto.resquest;
 
 import java.util.List;
 import java.util.UUID;
 
-import com.limito.payment.infrastructure.persistence.entity.PaymentEntity;
-import com.limito.payment.infrastructure.persistence.entity.enums.PaymentSatusEnum;
+import com.limito.payment.infrastructure.jpa.entity.PaymentEntity;
+import com.limito.payment.domain.enums.PaymentStatusEnum;
 import com.limito.payment.presentation.dto.request.OrderItem;
 
 import jakarta.validation.constraints.NotBlank;
@@ -25,12 +25,5 @@ public class CreatePaymentItemResquestV1 {
 	private int totalPrice;
 	@Size(min = 1, message = "결제 상품은 최소 1개 이상이어야 합니다.")
 	private List<OrderItem> items;
-
-	public PaymentEntity toEntity() {
-		return PaymentEntity.builder()
-			.orderId(orderId)
-			.status(PaymentSatusEnum.IN_PROGRESS)
-			.totalPrice(totalPrice)
-			.build();
-	}
+	
 }

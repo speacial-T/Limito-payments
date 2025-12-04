@@ -1,4 +1,4 @@
-package com.limito.payment.domain.dto.resquest;
+package com.limito.payment.application.dto.resquest;
 
 import java.util.List;
 

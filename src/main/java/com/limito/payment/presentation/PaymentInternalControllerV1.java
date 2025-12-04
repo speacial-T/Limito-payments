@@ -12,9 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.limito.payment.application.PaymentServiceV1;
 import com.limito.payment.presentation.dto.request.ConfirmPaymentRequestV1;
-import com.limito.payment.presentation.dto.request.PortOneConfirmPaymentRequest;
-import com.limito.payment.presentation.dto.response.ConfirmPaymentResponseV1;
-import com.limito.payment.presentation.dto.response.PortOneConfirmPaymentResponse;
 
 import lombok.RequiredArgsConstructor;
 
@@ -26,13 +23,9 @@ public class PaymentInternalControllerV1 {
 	private final PaymentServiceV1 paymentService;
 
 	@PostMapping("/{orderId}/confirm")
-	public ResponseEntity<ConfirmPaymentResponseV1> confirmPayment(
+	public ResponseEntity<Object> confirmPayment(
 		@PathVariable String orderId,
 		@RequestBody ConfirmPaymentRequestV1 request) {
-
-		PortOneConfirmPaymentRequest request1 = paymentService.preparePayment(UUID.fromString(orderId), request);
-
-		return new ResponseEntity<ConfirmPaymentResponseV1>(
-			new ConfirmPaymentResponseV1(), HttpStatus.OK);
+		return ResponseEntity.status(HttpStatus.OK).body(null);
 	}
 }

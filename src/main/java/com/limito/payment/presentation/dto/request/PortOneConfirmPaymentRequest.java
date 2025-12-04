@@ -16,8 +16,8 @@ import lombok.ToString;
 @NoArgsConstructor
 @Builder
 @ToString
+//포트원에 결제 요청 보내는 용
 public class PortOneConfirmPaymentRequest {
-
 	private UUID orderId;
 
 	private String itemSummary;

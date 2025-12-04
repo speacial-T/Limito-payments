@@ -2,7 +2,7 @@ package com.limito.payment.presentation.dto.response;
 
 import java.util.UUID;
 
-import com.limito.payment.infrastructure.persistence.entity.enums.PaymentSatusEnum;
+import com.limito.payment.domain.enums.PaymentStatusEnum;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,7 +20,7 @@ import lombok.ToString;
 public class ConfirmPaymentResponseV1 {
 	private UUID orderId;
 	private String paymentKey;
-	private PaymentSatusEnum paymentStatus;
+	private PaymentStatusEnum paymentStatus;
 	private int amount;
 	private String confirmedAt;
 }

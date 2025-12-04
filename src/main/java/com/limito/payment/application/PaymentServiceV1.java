@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.limito.payment.domain.repository.PaymentRepository;
-import com.limito.payment.presentation.dto.request.CompletePaymentRequest;
 import com.limito.payment.presentation.dto.request.ConfirmPaymentRequestV1;
 import com.limito.payment.presentation.dto.request.OrderItem;
 import com.limito.payment.presentation.dto.request.PortOneConfirmPaymentRequest;
@@ -33,7 +32,7 @@ public class PaymentServiceV1 {
 	private final WebClient webClient;
 
 	@Transactional
-	public ConfirmPaymentRequestV1 preparePayment(
+	public ConfirmPaymentRequestV1 getPayment(
 		UUID orderId
 	) {
 		log.info("Preparing payment for orderId: {}", orderId);

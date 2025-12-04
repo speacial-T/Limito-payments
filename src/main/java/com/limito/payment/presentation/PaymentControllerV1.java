@@ -41,7 +41,7 @@ public class PaymentControllerV1 {
 		Model model
 	) {
 
-		ConfirmPaymentRequestV1 paymentData = paymentService.preparePayment(orderId);
+		ConfirmPaymentRequestV1 paymentData = paymentService.getPayment(orderId);
 		model.addAttribute("orderId", orderId.toString());
 		model.addAttribute("itemSummary", paymentData.getItemSummary());
 		model.addAttribute("items", paymentData.getItems());
@@ -57,10 +57,12 @@ public class PaymentControllerV1 {
 		@PathVariable("paymentId") String paymentKey
 	) {
 		log.info("paymentKey={}", paymentKey);
+
 		ConfirmPaymentResponseV1 response = new ConfirmPaymentResponseV1();
 		response.setPaymentKey(paymentKey);
 
-		response = paymentService.confirmPayment(paymentKey, null);
+		response = paymentService.confirmPayment(paymentKey, response);
 		return ResponseEntity.ok(response);
 	}
+
 }
