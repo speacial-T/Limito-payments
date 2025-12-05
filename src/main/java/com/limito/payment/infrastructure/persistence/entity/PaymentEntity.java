@@ -68,8 +68,8 @@ public class PaymentEntity extends BaseEntity {
 	@Column(name = "payment_method")
 	private PaymentMethodEnum paymentMethod;
 
-	@Column(name = "card_last_num", length = 50)
-	private String cardLastNum;
+	@Column(name = "card_num", length = 50)
+	private String cardNum;
 
 	@Column(name = "card_name", length = 50)
 	private String cardName;
@@ -93,7 +93,7 @@ public class PaymentEntity extends BaseEntity {
 			.refundAt(p.refundAt)
 			.failLog(p.failLog)
 			.paymentMethod(p.paymentMethod)
-			.cardLastNum(p.cardLastNum)
+			.cardNum(p.cardNum)
 			.cardName(p.cardName)
 			.pgProvider(p.pgProvider)
 			.items(p.items.stream()

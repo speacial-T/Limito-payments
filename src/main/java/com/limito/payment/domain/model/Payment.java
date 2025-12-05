@@ -43,7 +43,7 @@ public class Payment {
 
 	private PaymentMethodEnum paymentMethod;
 
-	private String cardLastNum;
+	private String cardNum;
 
 	private String cardName;
 
@@ -64,7 +64,7 @@ public class Payment {
 			.refundAt(p.refundAt)
 			.failLog(p.failLog)
 			.paymentMethod(p.paymentMethod)
-			.cardLastNum(p.cardLastNum)
+			.cardNum(p.cardNum)
 			.cardName(p.cardName)
 			.pgProvider(p.pgProvider)
 			.items(p.items.stream()
