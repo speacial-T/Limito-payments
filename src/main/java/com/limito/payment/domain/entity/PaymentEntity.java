@@ -1,4 +1,4 @@
-package com.limito.payment.infrastructure.persistence.entity;
+package com.limito.payment.domain.entity;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -10,7 +10,13 @@ import com.limito.payment.domain.enums.CancelStatusEnum;
 import com.limito.payment.domain.enums.PaymentMethodEnum;
 import com.limito.payment.domain.enums.PaymentStatusEnum;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -71,4 +77,5 @@ public class PaymentEntity extends BaseEntity {
 
 	@OneToMany(mappedBy = "payment", orphanRemoval = true)
 	private List<PaymentItemEntity> items = new ArrayList<>();
+
 }

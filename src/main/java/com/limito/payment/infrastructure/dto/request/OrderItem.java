@@ -14,7 +14,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @Builder
 public class OrderItem {
-
 	private UUID orderItemId;
 
 	private String productName;

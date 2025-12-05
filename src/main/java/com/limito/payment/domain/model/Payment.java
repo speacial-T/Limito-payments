@@ -8,7 +8,6 @@ import java.util.UUID;
 import com.limito.payment.domain.enums.CancelStatusEnum;
 import com.limito.payment.domain.enums.PaymentMethodEnum;
 import com.limito.payment.domain.enums.PaymentStatusEnum;
-import com.limito.payment.infrastructure.persistence.entity.PaymentItemEntity;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

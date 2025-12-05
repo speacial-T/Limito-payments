@@ -2,8 +2,8 @@ package com.limito.payment.domain.model;
 
 import java.util.UUID;
 
+import com.limito.payment.domain.entity.PaymentEntity;
 import com.limito.payment.domain.enums.PaymentStatusEnum;
-import com.limito.payment.infrastructure.persistence.entity.PaymentEntity;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
