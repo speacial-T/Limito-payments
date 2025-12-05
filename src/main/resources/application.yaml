@@ -1,0 +1,50 @@
+server:
+  port: 19097
+spring:
+  application:
+    name: payment
+  datasource:
+    url: jdbc:postgresql://localhost:5432/limito-db
+    username: postgres
+    password: postgres
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+        show_sql: false
+    open-in-view: false
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html # 기본값
+  config:
+    import: optional:file:.env[.properties]
+#  cloud:
+#    openfeign:
+#      client:
+#        config:
+#          default:
+#            connect-timeout: 5000
+#            read-timeout: 5000
+eureka:
+  client:
+    enabled: false # Eureka Client 기능을 완전히 비활성화
+    fetch-registry: false # 레지스트리 정보를 가져오지 않음
+    register-with-eureka: false # Eureka에 이 서비스를 등록하지 않음
+#    service-url:
+#      defaultZone: http://localhost:19090/eureka/
+# 포트원 설정
+portone:
+  channel-key: ${PORTONE_CHANNEL_KEY}
+  store-id: ${PORTONE_STORE_ID}
+  api-secret: ${PORTONE_API_SECRET}
+  base-url: https://api.portone.io/v1/payments
+# 로깅 설정
+logging:
+  level:
+    com.limito.payment: INFO
+    #    org.springframework.web: error
+    #    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: DEBUG
