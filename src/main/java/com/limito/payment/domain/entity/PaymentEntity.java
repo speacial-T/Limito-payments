@@ -1,4 +1,4 @@
-package com.limito.payment.infrastructure.persistence.entity;
+package com.limito.payment.domain.entity;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
