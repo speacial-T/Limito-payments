@@ -2,8 +2,9 @@ package com.limito.payment.domain.entity;
 
 import java.util.UUID;
 
-import com.limito.common.entity.BaseEntity;
+import com.limito.common.audit.BaseEntity;
 import com.limito.payment.domain.enums.PaymentStatusEnum;
+import com.limito.payment.domain.enums.ProductTypeEnum;
 import com.limito.payment.domain.model.PaymentItem;
 
 import jakarta.persistence.Column;
@@ -11,6 +12,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -28,15 +31,13 @@ import lombok.NoArgsConstructor;
 public class PaymentItemEntity extends BaseEntity {
 
 	@Id
+	@GeneratedValue(strategy = GenerationType.UUID)
 	@Column(name = "payment_item_id", columnDefinition = "UUID")
 	private UUID paymentItemId;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "payment_id", nullable = false)
 	private PaymentEntity payment;
-
-	@Column(name = "order_id", nullable = false, columnDefinition = "UUID")
-	private UUID orderId;
 
 	@Column(name = "seller_id")
 	private Long sellerId;
@@ -50,11 +51,15 @@ public class PaymentItemEntity extends BaseEntity {
 	@Column(name = "product_price", nullable = false)
 	private Integer productPrice;
 
+	@Enumerated(EnumType.STRING)
+	@Column(name = "product_item_type", nullable = false)
+	private ProductTypeEnum productType;
+
 	@Column(name = "product_amount", nullable = false)
 	private Integer productAmount;
 
 	@Column(name = "refund_price")
-	private Long refundPrice;
+	private Integer refundPrice;
 
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)

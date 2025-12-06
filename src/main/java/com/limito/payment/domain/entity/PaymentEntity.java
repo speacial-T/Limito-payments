@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import com.limito.common.entity.BaseEntity;
-import com.limito.payment.domain.enums.CancelStatusEnum;
+import com.limito.common.audit.BaseEntity;
+import com.limito.payment.domain.enums.CancelAndRefundStatusEnum;
 import com.limito.payment.domain.enums.PaymentMethodEnum;
 import com.limito.payment.domain.enums.PaymentStatusEnum;
 import com.limito.payment.domain.model.Payment;
@@ -16,6 +16,8 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -23,15 +25,18 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Entity
 @Table(name = "p_payments")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
+@ToString
 public class PaymentEntity extends BaseEntity {
 
 	@Id
+	@GeneratedValue(strategy = GenerationType.UUID)
 	@Column(name = "payment_id", columnDefinition = "UUID")
 	private UUID paymentId;
 
@@ -40,10 +45,13 @@ public class PaymentEntity extends BaseEntity {
 
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
-	private PaymentStatusEnum status;
+	private PaymentStatusEnum paymentStatus;
 
-	@Column(name = "payment_key", nullable = false, length = 50)
+	@Column(name = "payment_key", length = 50)
 	private String paymentKey;
+
+	@Column(name = "item_summary", nullable = false, length = 50)
+	private String itemSummary;
 
 	@Column(name = "total_price", nullable = false)
 	private Integer totalPrice;
@@ -53,7 +61,7 @@ public class PaymentEntity extends BaseEntity {
 
 	@Enumerated(EnumType.STRING)
 	@Column(name = "cancel_status")
-	private CancelStatusEnum cancelStatus;
+	private CancelAndRefundStatusEnum cancelAndRefundStatus;
 
 	@Column(name = "approved_at")
 	private LocalDateTime approvedAt;
