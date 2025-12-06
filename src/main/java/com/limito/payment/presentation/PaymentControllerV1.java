@@ -9,10 +9,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.limito.payment.application.PaymentServiceV1;
-import com.limito.payment.presentation.dto.request.ConfirmPaymentRequestV1;
+import com.limito.payment.domain.dto.PaymentDto;
+import com.limito.payment.presentation.dto.request.PortOneConfirmPaymentRequest;
 import com.limito.payment.presentation.dto.response.ConfirmPaymentResponseV1;
 
 import lombok.RequiredArgsConstructor;
@@ -36,7 +38,7 @@ public class PaymentControllerV1 {
 		Model model
 	) {
 
-		ConfirmPaymentRequestV1 paymentData = paymentService.getPayment(orderId);
+		PortOneConfirmPaymentRequest paymentData = paymentService.getPaymentDetailByOrderIdForPgRequest(orderId);
 		model.addAttribute("orderId", orderId.toString());
 		model.addAttribute("itemSummary", paymentData.getItemSummary());
 		model.addAttribute("items", paymentData.getItems());
@@ -49,10 +51,12 @@ public class PaymentControllerV1 {
 
 	@PostMapping("/{paymentId}/confirm")
 	public ResponseEntity<ConfirmPaymentResponseV1> confirmPayment(
-		@PathVariable("paymentId") String paymentKey
+		@PathVariable("paymentId") String paymentId,
+		@RequestBody ConfirmPaymentResponseV1 response
 	) {
-		ConfirmPaymentResponseV1 response = new ConfirmPaymentResponseV1();
-		response = paymentService.confirmPayment(paymentKey, response);
+		log.info("PaymentControllerV1.confirmPayment called paymentKey={}, response= {}", paymentId, response);
+		response = paymentService.confirmPayment(paymentId, response);
+
 		return ResponseEntity.ok(response);
 	}
 }
