@@ -1,11 +1,10 @@
-package com.limito.payment.domain.entity;
+package com.limito.payment.domain.model;
 
 import java.util.UUID;
 
 import com.limito.common.audit.BaseEntity;
 import com.limito.payment.domain.enums.PaymentStatusEnum;
 import com.limito.payment.domain.enums.ProductTypeEnum;
-import com.limito.payment.domain.model.PaymentItem;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -25,57 +24,74 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "p_payment_items")
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
 public class PaymentItemEntity extends BaseEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.UUID)
 	@Column(name = "payment_item_id", columnDefinition = "UUID")
-	private UUID paymentItemId;
+	UUID paymentItemId;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "payment_id", nullable = false)
-	private PaymentEntity payment;
+	PaymentEntity payment;
 
 	@Column(name = "seller_id")
-	private Long sellerId;
+	Long sellerId;
 
 	@Column(name = "order_item_id", nullable = false, columnDefinition = "UUID")
-	private UUID orderItemId;
+	UUID orderItemId;
 
 	@Column(name = "product_name", length = 100, nullable = false)
-	private String productName;
+	String productName;
 
 	@Column(name = "product_price", nullable = false)
-	private Integer productPrice;
+	Integer productPrice;
 
 	@Enumerated(EnumType.STRING)
 	@Column(name = "product_item_type", nullable = false)
-	private ProductTypeEnum productType;
+	ProductTypeEnum productType;
 
 	@Column(name = "product_amount", nullable = false)
-	private Integer productAmount;
+	Integer productAmount;
 
 	@Column(name = "refund_price")
-	private Integer refundPrice;
+	Integer refundPrice;
 
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
-	private PaymentStatusEnum status;
-	public static PaymentItem toDomain(PaymentItemEntity p) {
-		return PaymentItem.builder()
-			.paymentItemId(p.paymentItemId)
-			.payment(p.payment)
-			.orderId(p.orderId)
-			.sellerId(p.sellerId)
-			.orderItemId(p.orderItemId)
-			.productName(p.productName)
-			.productPrice(p.productPrice)
-			.productAmount(p.productAmount)
-			.refundPrice(p.refundPrice)
-			.status(p.status)
-			.build();
+	PaymentStatusEnum status;
+
+	public static PaymentItemEntity createFrom(Long sellerId, UUID orderItemId,
+		ProductTypeEnum productType, String productName,
+		Integer productPrice, Integer productAmount) {
+		return new PaymentItemEntity(
+			null, null, sellerId, orderItemId, productName, productPrice,
+			productType, productAmount, null, PaymentStatusEnum.IN_PROGRESS
+		);
+	}
+
+	public void assignToPayment(PaymentEntity payment) {
+		this.payment = payment;
+	}
+
+	public void updateStatus(PaymentStatusEnum status) {
+		this.status = status;
+	}
+
+	public void refund(Integer refundAmount) {
+		this.refundPrice = refundAmount;
+		this.status = PaymentStatusEnum.REFUND;
+	}
+
+	public void canceled(Integer refundAmount) {
+		this.refundPrice = refundAmount;
+		this.status = PaymentStatusEnum.CANCELED;
+	}
+
+	public int totalPrice() {
+		return productPrice * productAmount;
 	}
 }

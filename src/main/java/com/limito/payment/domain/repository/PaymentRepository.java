@@ -4,12 +4,18 @@ import java.util.UUID;
 
 import org.springframework.transaction.annotation.Transactional;
 
-import com.limito.payment.domain.model.Payment;
+import com.limito.payment.domain.dto.PaymentDto;
+import com.limito.payment.domain.model.PaymentEntity;
 
 public interface PaymentRepository {
 	@Transactional()
-	Payment getByOrderId(UUID orderId);
+	PaymentDto getByOrderId(UUID orderId);
 
 	@Transactional()
-	Payment savePayment(Payment p);
+	PaymentDto save(PaymentEntity payment);
+
+	@Transactional(readOnly = true)
+	boolean existsByOrderId(UUID orderId);
+
+	void flush();
 }

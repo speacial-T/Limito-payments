@@ -5,12 +5,12 @@ import java.util.UUID;
 
 import org.springframework.transaction.annotation.Transactional;
 
-import com.limito.payment.domain.model.PaymentItem;
+import com.limito.payment.domain.dto.PaymentItemDto;
 
 public interface PaymentItemRepository {
 	@Transactional
-	void saveAll(List<PaymentItem> updatedProducts);
+	List<PaymentItemDto> saveAll(List<PaymentItemDto> updatedProducts);
 
 	@Transactional(readOnly = true)
-	List<PaymentItem> getPaymentItems(UUID paymentId);
+	List<PaymentItemDto> getPaymentItems(UUID paymentId);
 }
